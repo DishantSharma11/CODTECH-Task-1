@@ -1,1 +1,42 @@
+//JAVASCRIPT CODE 
+// Select elements
+const chatForm = document.getElementById('chatForm');
+const messageInput = document.getElementById('messageInput');
+const chatWindow = document.getElementById('chatWindow');
+
+// Load chat history from local storage
+let messages = JSON.parse(localStorage.getItem('chatMessages')) || [];
+
+// Function to render all messages
+function renderMessages() {
+    chatWindow.innerHTML = ''; // Clear chat window
+    messages.forEach((msg) => {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('chat-message', msg.sender);
+        messageDiv.textContent = msg.text;
+        chatWindow.appendChild(messageDiv);
+    });
+    // Scroll to the latest message
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+// Send a new message
+chatForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    const messageText = messageInput.value.trim();
+
+    if (messageText) {
+        // Add message to the messages array and update local storage
+        const newMessage = { sender: 'user', text: messageText };
+        messages.push(newMessage);
+        localStorage.setItem('chatMessages', JSON.stringify(messages));
+        
+        // Render the new message and reset the input field
+        renderMessages();
+        messageInput.value = '';
+    }
+});
+
+// Initial render
+renderMessages();
 
